@@ -33,8 +33,7 @@ func (list *List) Size() int {
 
 // Push inserts an element at the head of List
 func (list *List) Push(element int) {
-	elem := &Element{songId: element, next: list.head}
-	list.head = elem
+	list.head = &Element{songId: element, next: list.head}
 }
 
 // Pop removes the head element from the List and returns its songId
@@ -43,22 +42,17 @@ func (list *List) Pop() (int, error) {
 	if head == nil {
 		return 0, fmt.Errorf("list is empty")
 	}
-	value := head.songId
-	if head.next == nil {
-		list.head = nil
-	} else {
-		list.head = head.next
-	}
-	return value, nil
+
+	list.head = head.next
+	return head.songId, nil
 }
 
 // Array returns an array of songIds from the List
 func (list *List) Array() []int {
 	size := list.Size()
 	result := make([]int, size)
-	for ptr := list.head; ptr != nil; ptr = ptr.next {
-		size -= 1
-		result[size] = ptr.songId
+	for i, ptr := size-1, list.head; ptr != nil; i, ptr = i-1, ptr.next {
+		result[i] = ptr.songId
 	}
 	return result
 }
